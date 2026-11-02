@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head><title>Camera Ping</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/colors.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/dark.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/typography.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/elevation.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/icons.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/tokens/base.css">
+<link rel="stylesheet" href="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/styles.css">
+<script src="_ds/lumana-lumix-cloud-design-system-git-1b2e75e8-6731-4899-a6b5-0c0f64d44f4b/_ds_bundle.js"></script>
+<style>html,body{height:100%;margin:0}a{color:var(--color-text-selected)}a:hover{color:var(--color-primary-500)}</style>
+</helmet>
+<div class="dark-theme" style="display:flex;height:100vh;min-height:0;font-family:var(--font-sans);background:var(--color-elevation-surface-default);color:var(--color-text-default)">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Sidebar" items="{{ navItems }}" value="devices" logo-src="assets/logo-mark-alt.svg" hint-size="65px,100%"></x-import>
+<main style="flex:1;display:flex;flex-direction:column;min-width:0;min-height:0">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-shrink:0;height:49px;padding:0 24px;border-bottom:1px solid var(--color-border-default);font-size:14px;line-height:20px">
+<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+<span>Devices</span><span class="ui-icon-expand-arrow" style="font-size:12px;transform:rotate(-90deg);color:var(--color-icon-default)"></span>
+<span>Los Gatos, California (Office)</span><span class="ui-icon-expand-arrow" style="font-size:12px;transform:rotate(-90deg);color:var(--color-icon-default)"></span>
+<span>Camera</span><span class="ui-icon-expand-arrow" style="font-size:12px;transform:rotate(-90deg);color:var(--color-icon-default)"></span>
+<span>Kitchen (zoom camera)</span><span class="ui-icon-expand-arrow" style="font-size:12px;transform:rotate(-90deg);color:var(--color-icon-default)"></span>
+<span>Edit Camera: Streams</span>
+</div>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Save" type="primary" disabled="{{ true }}" hint-size="64px,32px"></x-import>
+</div>
+<div style="flex:1;display:flex;min-height:0">
+<aside style="width:230px;flex-shrink:0;padding:20px 14px;border-right:1px solid var(--color-border-default);display:flex;flex-direction:column;gap:4px;overflow-y:auto">
+<sc-for list="{{ menu }}" as="m" hint-placeholder-count="9">
+<div style="display:flex;flex-direction:column;gap:4px">
+<sc-if value="{{ m.sep }}"><div style="height:1px;background:var(--color-border-default);margin:8px 0"></div></sc-if>
+<div style="{{ m.style }}" style-hover="background:var(--color-background-selected-active)"><span class="{{ m.icon }}" style="font-size:16px"></span>{{ m.label }}</div>
+</div>
+</sc-for>
+</aside>
+<div style="flex:1;overflow:auto;padding:24px 22px">
+<div style="max-width:648px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:2px">
+<div style="font-size:20px;line-height:28px;font-weight:500">Streams</div>
+<div style="font-size:12px;line-height:20px;color:var(--color-text-subtlest)">Camera connection path &amp; credentials per stream</div>
+</div>
+<div style="display:flex;gap:32px;border-bottom:1px solid var(--color-border-default)">
+<div style="padding:10px 0;font-size:14px;color:var(--color-text-selected);border-bottom:2px solid var(--color-primary-500);margin-bottom:-1px;cursor:pointer">Main stream</div>
+<div style="padding:10px 0;font-size:14px;cursor:pointer">Sub stream</div>
+</div>
+<div style="font-size:12px;line-height:20px">To set the stream that each feature uses, go to the <strong>Storage</strong> and <strong>Analytics</strong> panels in the left sidebar</div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 14px">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" label="IP address" value="192.168.5.207" hint-size="100%,68px"></x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" label="Username" value="admin" hint-size="100%,68px"></x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" label="Password" value="••••••••••" hint-size="100%,68px"></x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" label="RTSP port" value="554" hint-size="100%,68px"></x-import>
+<div style="grid-column:span 3;min-width:0;display:flex;flex-direction:column;gap:4px">
+<div style="font-size:14px;line-height:24px;font-weight:500">Path</div>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" value="/media/video1" multiline="{{ true }}" rows="{{ 3 }}" hint-size="100%,100px"></x-import>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:4px">
+<div style="font-size:14px;line-height:24px;font-weight:500">Protocol</div>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Select" value="{{ protocol }}" options="{{ protocols }}" onChange="{{ setProtocol }}" hint-size="100%,40px"></x-import>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Toggle" value="{{ audio }}" onChange="{{ setAudio }}" hint-size="34px,24px"></x-import>
+<span style="font-size:14px;line-height:24px">Enable audio</span>
+</div>
+</div>
+</div>
+<div style="display:flex;align-items:flex-start;gap:16px">
+<div style="display:flex;flex-direction:column;align-items:stretch;gap:8px;width:max-content;flex-shrink:0">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Ping" type="secondary" loading="{{ pinging }}" onClick="{{ ping }}" hint-size="60px,32px"></x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Test configuration" type="secondary" hint-size="140px,32px"></x-import>
+</div>
+<sc-if value="{{ hasPing }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;flex:1;min-width:0;display:flex;flex-direction:column;border:1px solid var(--color-border-default);border-radius:4px;background:var(--color-elevation-surface-subtle)">
+<div style="position:absolute;top:4px;right:4px">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" iconClass="ui-icon-close" type="noBorderDefault" onClick="{{ clearPing }}" hint-size="24px,24px"></x-import>
+</div>
+<div style="padding:10px 40px 10px 12px;max-height:200px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:18px">
+<sc-for list="{{ pingLines }}" as="ln" hint-placeholder-count="0">
+<div style="white-space:pre-wrap;word-break:break-word">{{ ln }}</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+<div style="height:340px;border:1px dashed var(--color-border-default);border-radius:4px;background:var(--color-elevation-surface-subtle);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+<span class="ui-icon-camera" style="font-size:16px;color:var(--color-icon-default)"></span>
+<span style="font-size:14px">Camera preview</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { protocol: 'udp', audio: true, pingLines: [], pinging: false };
+  timers = [];
+  componentWillUnmount() { this.timers.forEach(clearTimeout); }
+  runPing = () => {
+    if (this.state.pinging) return;
+    this.timers.forEach(clearTimeout); this.timers = [];
+    const name = 'Kitchen (zoom camera)', id = 'cam-7f3a21c4', ip = '192.168.5.207', n = 4;
+    const times = Array.from({ length: n }, () => +(2.6 + Math.random() * 1.6).toFixed(2));
+    const lost = Math.random() < 0.25 ? 1 : 0;
+    const ok = times.slice(0, n - lost);
+    const avg = ok.reduce((a, b) => a + b, 0) / ok.length;
+    const sd = Math.sqrt(ok.reduce((a, b) => a + (b - avg) ** 2, 0) / ok.length);
+    const rate = (ok.length / n) * 100;
+    const add = (l) => this.setState(s => ({ pingLines: [...s.pingLines, l] }));
+    this.setState({ pinging: true, pingLines: [`PING ${name} (${ip}) camera_id=${id}: 56 data bytes`] });
+    times.forEach((t, i) => this.timers.push(setTimeout(() => add(i < ok.length
+      ? `64 bytes from ${ip}: icmp_seq=${i} ttl=64 time=${t.toFixed(2)} ms`
+      : `Request timeout for icmp_seq ${i}`), 600 * (i + 1))));
+    this.timers.push(setTimeout(() => {
+      ['', `--- ${name} ping statistics ---`,
+        `Camera name: ${name}`, `Camera ID: ${id}`,
+        `${n} packets transmitted, ${ok.length} packets received, ${(100 - rate).toFixed(1)}% packet loss`,
+        `Success rate: ${rate.toFixed(1)}%`,
+        `Response time: min/avg/max = ${Math.min(...ok).toFixed(2)}/${avg.toFixed(2)}/${Math.max(...ok).toFixed(2)} ms`,
+        `Standard deviation: ${sd.toFixed(2)} ms`].forEach(add);
+      this.setState({ pinging: false });
+    }, 600 * (n + 1)));
+  };
+  renderVals() {
+    const base = 'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;font-size:14px;line-height:24px;cursor:pointer';
+    const items = [
+      ['Details', 'ui-icon-device'], ['Live view', 'ui-icon-live'], ['Streams', 'ui-icon-stream'],
+      ['Storage', 'ui-icon-storage'], ['Analytics', 'ui-icon-analytics'], ['PTZ', 'ui-icon-ptz'],
+      ['Shortcuts', 'ui-icon-camera-shortcut'], ['Camera API', 'ui-icon-api'], ['Monitoring', 'ui-icon-monitoring', true],
+    ];
+    const toStyle = (s) => Object.fromEntries(s.split(';').map(p => { const [k, v] = p.split(':'); return [k.replace(/-([a-z])/g, (_, c) => c.toUpperCase()), v]; }));
+    return {
+      ping: this.runPing,
+      pinging: this.state.pinging,
+      pingLines: this.state.pingLines,
+      hasPing: this.state.pingLines.length > 0,
+      clearPing: () => { this.timers.forEach(clearTimeout); this.setState({ pingLines: [], pinging: false }); },
+      protocol: this.state.protocol,
+      setProtocol: (v) => this.setState({ protocol: v }),
+      audio: this.state.audio,
+      setAudio: (v) => this.setState({ audio: v }),
+      protocols: [{ value: 'udp', label: 'UDP' }, { value: 'tcp', label: 'TCP' }, { value: 'http', label: 'HTTP' }],
+      menu: items.map(([label, icon, sep]) => ({
+        label, icon, sep: !!sep,
+        style: toStyle(base + (label === 'Streams' ? ';background:var(--color-background-selected);color:var(--color-text-selected)' : '')),
+      })),
+      navItems: [
+        { value: 'devices', label: 'Devices', icon: 'ui-icon-camera-sidebar' },
+        { value: 'search', label: 'Search', icon: 'ui-icon-search-sidebar' },
+        { value: 'alerts', label: 'Alerts', icon: 'ui-icon-notifications-sidebar' },
+        { value: 'dashboards', label: 'Dashboards', icon: 'ui-icon-dashboard-sidebar' },
+        { value: 'walls', label: 'Walls', icon: 'ui-icon-wall-sidebar' },
+        { value: 'archives', label: 'Archives', icon: 'ui-icon-archive-sidebar' },
+        { value: 'cases', label: 'Cases', icon: 'ui-icon-menu-folder-sidebar' },
+        { value: 'events', label: 'Events manager', icon: 'ui-icon-controls-event-sidebar', separator: true },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
