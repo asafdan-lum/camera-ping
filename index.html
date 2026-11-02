@@ -29,7 +29,7 @@
 <span>Los Gatos, California (Office)</span><span class="ui-icon-expand-arrow" style="font-size:12px;transform:rotate(-90deg);color:var(--color-icon-default)"></span>
 <span>Camera</span><span class="ui-icon-expand-arrow" style="font-size:12px;transform:rotate(-90deg);color:var(--color-icon-default)"></span>
 <span>Kitchen (zoom camera)</span><span class="ui-icon-expand-arrow" style="font-size:12px;transform:rotate(-90deg);color:var(--color-icon-default)"></span>
-<span>Edit Camera: Streams</span>
+<span>Edit Camera: {{ pageTitle }}</span>
 </div>
 <x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Save" type="primary" disabled="{{ true }}" hint-size="64px,32px"></x-import>
 </div>
@@ -38,11 +38,66 @@
 <sc-for list="{{ menu }}" as="m" hint-placeholder-count="9">
 <div style="display:flex;flex-direction:column;gap:4px">
 <sc-if value="{{ m.sep }}"><div style="height:1px;background:var(--color-border-default);margin:8px 0"></div></sc-if>
-<div style="{{ m.style }}" style-hover="background:var(--color-background-selected-active)"><span class="{{ m.icon }}" style="font-size:16px"></span>{{ m.label }}</div>
+<div onClick="{{ m.onClick }}" style="{{ m.style }}" style-hover="background:var(--color-background-selected-active)"><span class="{{ m.icon }}" style="font-size:16px"></span>{{ m.label }}</div>
 </div>
 </sc-for>
 </aside>
-<div style="flex:1;overflow:auto;padding:24px 22px">
+<div style="position:relative;flex:1;min-width:0;display:flex;overflow:hidden">
+<div style="flex:1;min-width:0;overflow:auto;padding:24px 22px">
+<sc-if value="{{ isShortcuts }}" hint-placeholder-val="{{ true }}">
+<div style="max-width:848px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:2px">
+<div style="font-size:20px;line-height:28px;font-weight:500">Shortcuts</div>
+<div style="font-size:12px;line-height:20px;color:var(--color-text-subtlest)">Place camera shortcuts in the live view to create links to nearby cameras</div>
+</div>
+<div style="position:relative;aspect-ratio:844/480;border:1px solid var(--color-border-default);border-radius:4px;overflow:hidden;background:#000">
+<img src="assets/kitchen-cam.png" alt="Kitchen (zoom camera)" style="display:block;width:100%;height:100%;object-fit:cover">
+<div title="Go to camera" style="position:absolute;left:77.7%;top:50.2%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;box-sizing:border-box;border:2px solid rgba(255,255,255,.9);background:var(--color-primary-500);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer"><span class="ui-icon-video-cam" style="font-size:16px"></span></div>
+<div title="{{ lockTitle }}" onClick="{{ toggleLock }}" style="position:absolute;left:12px;bottom:12px;width:36px;height:36px;border-radius:4px;box-sizing:border-box;background:rgba(52,64,84,.55);backdrop-filter:blur(6px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .3s" style-hover="background:rgba(52,64,84,.8)"><span class="{{ lockIcon }}" style="font-size:16px"></span></div>
+<div style="position:absolute;bottom:12px;right:12px;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ webhooks }}" as="w" hint-placeholder-count="1">
+<div onMouseEnter="{{ w.enter }}" onMouseLeave="{{ w.leave }}" style="position:relative">
+<div onClick="{{ w.run }}" style="width:36px;height:36px;border-radius:4px;box-sizing:border-box;background:rgba(52,64,84,.55);backdrop-filter:blur(6px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .3s" style-hover="background:rgba(52,64,84,.8)"><span class="{{ w.icon }}" style="font-size:16px"></span></div>
+<sc-if value="{{ w.showTip }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;right:44px;top:50%;transform:translateY(-50%);width:max-content;max-width:240px;padding:6px 10px;border-radius:4px;background:rgba(16,24,40,.9);backdrop-filter:blur(6px);color:#fff;font-size:12px;line-height:20px;pointer-events:none">
+<div style="text-wrap:pretty">{{ w.tooltip }}</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ pushToTalk }}" hint-placeholder-val="{{ true }}">
+<div title="Push to talk" style="width:36px;height:36px;border-radius:4px;box-sizing:border-box;background:rgba(52,64,84,.55);backdrop-filter:blur(6px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .3s" style-hover="background:rgba(52,64,84,.8)"><span class="ui-icon-microphone" style="font-size:16px"></span></div>
+</sc-if>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:stretch;gap:8px;width:max-content">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Add shortcut" type="secondary" hint-size="105px,32px"></x-import>
+<sc-if value="{{ canAddWebhook }}" hint-placeholder-val="{{ false }}">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Add webhook" type="secondary" onClick="{{ addWebhook }}" hint-size="105px,32px"></x-import>
+</sc-if>
+</div>
+<sc-if value="{{ hasWebhooks }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="font-size:14px;line-height:24px;font-weight:500">Webhook</div>
+<div style="display:flex;flex-direction:column;border:1px solid var(--color-border-default);border-radius:4px">
+<sc-for list="{{ webhooks }}" as="w" hint-placeholder-count="1">
+<div style="display:flex;align-items:center;gap:12px;padding:8px 8px 8px 16px;border-top:1px solid var(--color-border-default);margin-top:-1px">
+<span class="{{ w.icon }}" style="font-size:16px;color:var(--color-icon-default)"></span>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<span style="font-size:14px;line-height:24px;font-weight:500">{{ w.name }}</span>
+<span style="font-size:12px;line-height:20px;color:var(--color-text-subtlest);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ w.url }}</span>
+</div>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Test" type="secondary" loading="{{ testing }}" onClick="{{ w.test }}" hint-size="56px,32px"></x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" iconClass="ui-icon-edit" type="noBorderDefault" onClick="{{ w.edit }}" hint-size="32px,32px"></x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" iconClass="ui-icon-delete" type="noBorderDefault" onClick="{{ w.remove }}" hint-size="32px,32px"></x-import>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ isStreams }}" hint-placeholder-val="{{ false }}">
 <div style="max-width:648px;display:flex;flex-direction:column;gap:20px">
 <div style="display:flex;flex-direction:column;gap:2px">
 <div style="font-size:20px;line-height:28px;font-weight:500">Streams</div>
@@ -96,16 +151,50 @@
 <span style="font-size:14px">Camera preview</span>
 </div>
 </div>
+</sc-if>
+</div>
+<sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Drawer" title="{{ drawerTitle }}" width="{{ 480 }}" onClose="{{ closeDrawer }}" onSave="{{ saveWebhook }}" hint-size="480px,100%">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.DrawerField" label="Webhook name" required="{{ true }}" hint-size="100%,68px">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" value="{{ form.name }}" placeholder="Enter name" invalid="{{ nameInvalid }}" onChange="{{ setName }}" hint-size="100%,40px"></x-import>
+</x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.DrawerField" label="Webhook URL" required="{{ true }}" hint-size="100%,68px">
+<div style="display:flex;gap:8px;align-items:flex-start">
+<div style="flex:1;min-width:0">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" value="{{ form.url }}" placeholder="https://" invalid="{{ urlInvalid }}" onChange="{{ setUrl }}" hint-size="100%,40px"></x-import>
+</div>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Button" text="Test" type="secondary" size="m" loading="{{ testing }}" onClick="{{ testForm }}" hint-size="64px,40px"></x-import>
+</div>
+</x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.DrawerField" label="Icon" required="{{ true }}" hint-size="100%,140px">
+<div style="display:grid;grid-template-columns:repeat(auto-fill,40px);gap:8px">
+<sc-for list="{{ iconOpts }}" as="ic" hint-placeholder-count="24">
+<div title="{{ ic.label }}" onClick="{{ ic.pick }}" style="{{ ic.style }}" style-hover="background:var(--color-background-selected-active)"><span class="{{ ic.cls }}" style="font-size:20px"></span></div>
+</sc-for>
+</div>
+</x-import>
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.DrawerField" label="Tooltip text" hint-size="100%,120px">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Input" value="{{ form.tooltip }}" multiline="{{ true }}" rows="{{ 4 }}" placeholder="Shown when hovering over the icon" onChange="{{ setTooltip }}" hint-size="100%,100px"></x-import>
+</x-import>
+</x-import>
+</sc-if>
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:20;width:max-content;max-width:calc(100% - 32px);box-shadow:var(--shadow-md)">
+<x-import component-from-global-scope="LumanaDesignSystem_1b2e75.Toaster" type="{{ toastType }}" hint-size="320px,44px">{{ toast }}</x-import>
+</div>
+</sc-if>
 </div>
 </div>
 </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script>
+<script type="text/x-dc" data-dc-script data-props="{&quot;pushToTalk&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
-  state = { protocol: 'udp', audio: true, pingLines: [], pinging: false };
+  state = { protocol: 'udp', audio: true, pingLines: [], pinging: false, page: 'shortcuts', hoverId: null, form: null, tried: false, toast: null,
+    webhooks: [{ id: 1, name: 'Unlock back door', icon: 'ui-icon-door-unlock', tooltip: 'Unlocks the kitchen back door for 10 seconds', url: 'https://hooks.lumana.ai/door/kitchen-back/unlock' }] };
+  static ICONS = ['webhook','door-unlock','door-lock','lock','key','notification-on','speaker','microphone','armed','disarmed','shield','warning','incident','phone','mail','snapshoot','play','stop','link','terminal','output','workflow','home','star'];
   timers = [];
-  componentWillUnmount() { this.timers.forEach(clearTimeout); }
+  componentWillUnmount() { this.timers.forEach(clearTimeout); clearTimeout(this.toastT); }
   runPing = () => {
     if (this.state.pinging) return;
     this.timers.forEach(clearTimeout); this.timers = [];
@@ -122,16 +211,68 @@ class Component extends DCLogic {
       ? `64 bytes from ${ip}: icmp_seq=${i} ttl=64 time=${t.toFixed(2)} ms`
       : `Request timeout for icmp_seq ${i}`), 600 * (i + 1))));
     this.timers.push(setTimeout(() => {
-      ['', `--- ${name} ping statistics ---`,
-        `Camera name: ${name}`, `Camera ID: ${id}`,
-        `${n} packets transmitted, ${ok.length} packets received, ${(100 - rate).toFixed(1)}% packet loss`,
-        `Success rate: ${rate.toFixed(1)}%`,
-        `Response time: min/avg/max = ${Math.min(...ok).toFixed(2)}/${avg.toFixed(2)}/${Math.max(...ok).toFixed(2)} ms`,
-        `Standard deviation: ${sd.toFixed(2)} ms`].forEach(add);
+      ['', 'Ping Summary:',
+        `    Average time: ${avg.toFixed(2)} ms`,
+        `    Standard Deviation: ${sd.toFixed(2)} ms`,
+        `    Max time: ${Math.max(...ok).toFixed(2)} ms`,
+        `    Success Rate: ${rate.toFixed(2)}%`].forEach(add);
       this.setState({ pinging: false });
     }, 600 * (n + 1)));
   };
+  showToast(toast, toastType = 'success', ms = 3000) {
+    clearTimeout(this.toastT);
+    this.setState({ toast, toastType });
+    this.toastT = setTimeout(() => this.setState({ toast: null }), ms);
+  }
+  runWebhook(w) { this.showToast('Webhook "' + w.name + '" executed'); }
+  testWebhook(url) {
+    if (this.state.testing) return;
+    url = (url || '').trim();
+    if (!/^https?:\/\/[^\s.]+\.[^\s]+$/.test(url)) return this.showToast('Test failed: enter a valid URL', 'error', 4000);
+    this.setState({ testing: true });
+    this.timers.push(setTimeout(() => {
+      this.setState({ testing: false });
+      const ms = Math.round(90 + Math.random() * 260);
+      if (Math.random() < 0.8) this.showToast('Test succeeded: 200 OK · ' + ms + ' ms', 'success', 4000);
+      else this.showToast('Test failed: 504 Gateway timeout after 10,000 ms', 'error', 5000);
+    }, 1200));
+  }
+  saveWebhook() {
+    const f = this.state.form;
+    if (!f.name.trim() || !f.url.trim()) return this.setState({ tried: true });
+    this.setState(s => ({ form: null, tried: false, webhooks: f.id ? s.webhooks.map(w => w.id === f.id ? f : w) : [{ ...f, id: Date.now() }] }));
+  }
   renderVals() {
+    const toS = (s) => Object.fromEntries(s.split(';').map(p => { const [k, v] = p.split(':'); return [k.replace(/-([a-z])/g, (_, c) => c.toUpperCase()), v]; }));
+    const f = this.state.form, setF = (k) => (e) => this.setState(s => ({ form: { ...s.form, [k]: e.target.value } }));
+    const tile = 'width:40px;height:40px;border-radius:4px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--color-border-default)';
+    const shortcutVals = {
+      isShortcuts: this.state.page === 'shortcuts', isStreams: this.state.page === 'streams',
+      pageTitle: this.state.page === 'shortcuts' ? 'Shortcuts' : 'Streams',
+      hasWebhooks: this.state.webhooks.length > 0,
+      webhooks: this.state.webhooks.map(w => ({ ...w,
+        showTip: this.state.hoverId === w.id && !!(w.tooltip || '').trim(),
+        enter: () => this.setState({ hoverId: w.id }), leave: () => this.setState({ hoverId: null }),
+        run: () => this.runWebhook(w), test: () => this.testWebhook(w.url),
+        edit: () => this.setState({ form: { ...w }, tried: false }),
+        remove: () => this.setState(s => ({ webhooks: s.webhooks.filter(x => x.id !== w.id) })) })),
+      hasToast: !!this.state.toast, toast: this.state.toast,
+      pushToTalk: this.props.pushToTalk ?? true,
+      lockIcon: this.state.unlocked ? 'ui-icon-door-unlock' : 'ui-icon-door-lock',
+      lockTitle: this.state.unlocked ? 'Lock door' : 'Unlock door',
+      toggleLock: () => this.setState(s => ({ unlocked: !s.unlocked })),
+      canAddWebhook: this.state.webhooks.length === 0,
+      testing: !!this.state.testing, toastType: this.state.toastType || 'success',
+      testForm: () => this.testWebhook(f && f.url),
+      addWebhook: () => this.setState({ form: { id: null, name: '', url: '', icon: 'ui-icon-webhook', tooltip: '' }, tried: false }),
+      drawerOpen: !!f, drawerTitle: f && f.id ? 'Edit webhook' : 'Add webhook',
+      form: f || {}, closeDrawer: () => this.setState({ form: null }), saveWebhook: () => this.saveWebhook(),
+      setName: setF('name'), setUrl: setF('url'), setTooltip: setF('tooltip'),
+      nameInvalid: !!(f && this.state.tried && !f.name.trim()), urlInvalid: !!(f && this.state.tried && !f.url.trim()),
+      iconOpts: Component.ICONS.map(n => { const cls = 'ui-icon-' + n, sel = f && f.icon === cls;
+        return { cls, label: n.replace(/-/g, ' '), pick: () => this.setState(s => ({ form: { ...s.form, icon: cls } })),
+          style: toS(tile + (sel ? ';background:var(--color-background-selected);color:var(--color-text-selected);border-color:var(--color-border-selected-default)' : ';color:var(--color-icon-default)')) }; }),
+    };
     const base = 'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;font-size:14px;line-height:24px;cursor:pointer';
     const items = [
       ['Details', 'ui-icon-device'], ['Live view', 'ui-icon-live'], ['Streams', 'ui-icon-stream'],
@@ -140,6 +281,7 @@ class Component extends DCLogic {
     ];
     const toStyle = (s) => Object.fromEntries(s.split(';').map(p => { const [k, v] = p.split(':'); return [k.replace(/-([a-z])/g, (_, c) => c.toUpperCase()), v]; }));
     return {
+      ...shortcutVals,
       ping: this.runPing,
       pinging: this.state.pinging,
       pingLines: this.state.pingLines,
@@ -152,7 +294,8 @@ class Component extends DCLogic {
       protocols: [{ value: 'udp', label: 'UDP' }, { value: 'tcp', label: 'TCP' }, { value: 'http', label: 'HTTP' }],
       menu: items.map(([label, icon, sep]) => ({
         label, icon, sep: !!sep,
-        style: toStyle(base + (label === 'Streams' ? ';background:var(--color-background-selected);color:var(--color-text-selected)' : '')),
+        onClick: () => (label === 'Streams' || label === 'Shortcuts') && this.setState({ page: label.toLowerCase() }),
+        style: toStyle(base + (label === (this.state.page === 'shortcuts' ? 'Shortcuts' : 'Streams') ? ';background:var(--color-background-selected);color:var(--color-text-selected)' : '')),
       })),
       navItems: [
         { value: 'devices', label: 'Devices', icon: 'ui-icon-camera-sidebar' },
